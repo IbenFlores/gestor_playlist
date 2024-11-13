@@ -3,32 +3,29 @@
 
 #include "Song.h"
 
-// A single node in the BST
 class BSTNode {
 public:
-    Song song;      // The song associated with the node
-    BSTNode* left;  // Pointer to the left child
-    BSTNode* right; // Pointer to the right child
+    Song song;
+    BSTNode* left;
+    BSTNode* right;
 
     BSTNode(Song s) : song(s), left(nullptr), right(nullptr) {}
 };
 
-// Binary Search Tree for storing songs
 class BST {
 private:
-    BSTNode* root;  // Root of the tree
+    BSTNode* root;
 
-    // Helper functions
-    void insert(BSTNode*& node, Song song);  // Insert a song
-    BSTNode* search(BSTNode* node, int id);  // Search a song by ID
-    void inorderTraversal(BSTNode* node);    // Print all songs in order
+    void insert(BSTNode*& node, Song song);
+    BSTNode* search(BSTNode* node, int id);
+    void inorderTraversal(BSTNode* node);
 
 public:
-    BST() : root(nullptr) {}  // Constructor to initialize the BST
+    BST() : root(nullptr) {}
 
-    void insert(Song song);   // Public insert method
-    Song* search(int id);     // Public search method
-    void printInOrder();      // Public method to print all songs
+    void insert(Song song);
+    Song* search(int id);
+    void printInOrder();
 };
 
 #endif

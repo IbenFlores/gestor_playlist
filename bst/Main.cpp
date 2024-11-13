@@ -5,7 +5,6 @@
 #include <sstream>
 #include <vector>
 
-// Function to read a song from a CSV line
 Song readSongFromCSVLine(const std::string& line) {
     Song song;
     std::stringstream ss(line);
@@ -35,43 +34,36 @@ Song readSongFromCSVLine(const std::string& line) {
     return song;
 }
 
-// Function to load all songs from the CSV file and insert them into the BST
 std::vector<Song> loadSongsFromCSV(const std::string& filename, BST& bst) {
     std::vector<Song> songs;
     std::ifstream file(filename);
     std::string line;
 
-    // Skip the header
     std::getline(file, line);
 
-    // Read and insert each song
     while (std::getline(file, line)) {
         Song song = readSongFromCSVLine(line);
-        bst.insert(song);  // Insert song into BST
-        songs.push_back(song);  // Optionally store songs in vector for further use
+        bst.insert(song);
+        songs.push_back(song);
     }
 
     return songs;
 }
 
 int main() {
-    // Initialize the BST
     BST bst;
 
-    // Load songs from the CSV file and insert them into the BST
     std::vector<Song> songs = loadSongsFromCSV("test.csv", bst);
 
-    // Print all songs in sorted order by ID
     std::cout << "Songs in sorted order by ID:\n";
     bst.printInOrder();
 
-    // Search for a specific song by ID
-    int searchId = 9;  // Example ID to search for
+    int searchId = 9;
     Song* foundSong = bst.search(searchId);
     
     if (foundSong) {
         std::cout << "\nSong with ID " << searchId << " found:\n";
-        foundSong->printSong();  // Print details of the found song
+        foundSong->printSong();
     } else {
         std::cout << "\nSong with ID " << searchId << " not found.\n";
     }
