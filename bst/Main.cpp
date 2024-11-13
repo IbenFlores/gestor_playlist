@@ -1,85 +1,79 @@
-// Main.cpp
+#include "Song.h"
+#include "BST.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "Song.h"
-#include "BST.h"
+#include <vector>
 
-#define MAX_SONGS 1000
+// Function to read a song from a CSV line
+Song readSongFromCSVLine(const std::string& line) {
+    Song song;
+    std::stringstream ss(line);
+    std::string field;
 
-int main() {
-    std::ifstream file("spotify_data.csv");
-    if (!file.is_open()) {
-        std::cerr << "File opening failed" << std::endl;
-        return 1;
-    }
+    std::getline(ss, field, ','); song.id = std::stoi(field);
+    std::getline(ss, song.artist_name, ',');
+    std::getline(ss, song.track_name, ',');
+    std::getline(ss, song.track_id, ',');
+    std::getline(ss, field, ','); song.popularity = std::stoi(field);
+    std::getline(ss, field, ','); song.year = std::stoi(field);
+    std::getline(ss, song.genre, ',');
+    std::getline(ss, field, ','); song.danceability = std::stod(field);
+    std::getline(ss, field, ','); song.energy = std::stod(field);
+    std::getline(ss, field, ','); song.key = std::stoi(field);
+    std::getline(ss, field, ','); song.loudness = std::stod(field);
+    std::getline(ss, field, ','); song.mode = std::stoi(field);
+    std::getline(ss, field, ','); song.speechiness = std::stod(field);
+    std::getline(ss, field, ','); song.acousticness = std::stod(field);
+    std::getline(ss, field, ','); song.instrumentalness = std::stod(field);
+    std::getline(ss, field, ','); song.liveness = std::stod(field);
+    std::getline(ss, field, ','); song.valence = std::stod(field);
+    std::getline(ss, field, ','); song.tempo = std::stod(field);
+    std::getline(ss, field, ','); song.duration_ms = std::stoi(field);
+    std::getline(ss, field, ','); song.time_signature = std::stoi(field);
 
-    BST songTree;
+    return song;
+}
+
+// Function to load all songs from the CSV file and insert them into the BST
+std::vector<Song> loadSongsFromCSV(const std::string& filename, BST& bst) {
+    std::vector<Song> songs;
+    std::ifstream file(filename);
     std::string line;
 
-    // Skip the header line
+    // Skip the header
     std::getline(file, line);
 
-    // Read each song data line and insert it into the BST
+    // Read and insert each song
     while (std::getline(file, line)) {
-        std::istringstream ss(line);
-        std::string artist_name, track_name, genre;
-        int track_id, popularity, year, key, mode, duration_ms, time_signature;
-        double danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, tempo;
-
-        // Read and parse CSV values
-        std::getline(ss, artist_name, ',');
-        std::getline(ss, track_name, ',');
-        ss >> track_id;
-        ss.ignore();
-        ss >> popularity;
-        ss.ignore();
-        ss >> year;
-        ss.ignore();
-        std::getline(ss, genre, ',');
-        ss >> danceability;
-        ss.ignore();
-        ss >> energy;
-        ss.ignore();
-        ss >> key;
-        ss.ignore();
-        ss >> loudness;
-        ss.ignore();
-        ss >> mode;
-        ss.ignore();
-        ss >> speechiness;
-        ss.ignore();
-        ss >> acousticness;
-        ss.ignore();
-        ss >> instrumentalness;
-        ss.ignore();
-        ss >> liveness;
-        ss.ignore();
-        ss >> valence;
-        ss.ignore();
-        ss >> tempo;
-        ss.ignore();
-        ss >> duration_ms;
-        ss.ignore();
-        ss >> time_signature;
-
-        // Create a Song object and insert it into the BST
-        Song song(artist_name, track_name, track_id, popularity, year, genre, danceability, energy, key, loudness, mode,
-                  speechiness, acousticness, instrumentalness, liveness, valence, tempo, duration_ms, time_signature);
-        songTree.insert(song);
+        Song song = readSongFromCSVLine(line);
+        bst.insert(song);  // Insert song into BST
+        songs.push_back(song);  // Optionally store songs in vector for further use
     }
 
-    file.close();
+    return songs;
+}
 
-    // Test search functionality
-    int search_id = 123;  // Example track_id to search for
-    BSTNode* result = songTree.search(search_id);
+int main() {
+    // Initialize the BST
+    BST bst;
 
-    if (result != nullptr) {
-        std::cout << "Song found:" << std::endl;
-        result->song.printSong();  // Print the song information
+    // Load songs from the CSV file and insert them into the BST
+    std::vector<Song> songs = loadSongsFromCSV("test.csv", bst);
+
+    // Print all songs in sorted order by ID
+    std::cout << "Songs in sorted order by ID:\n";
+    bst.printInOrder();
+
+    // Search for a specific song by ID
+    int searchId = 9;  // Example ID to search for
+    Song* foundSong = bst.search(searchId);
+    
+    if (foundSong) {
+        std::cout << "\nSong with ID " << searchId << " found:\n";
+        foundSong->printSong();  // Print details of the found song
     } else {
-        std::cout << "Song with track ID " << search_id << " not found." << std::endl;
+        std::cout << "\nSong with ID " << searchId << " not found.\n";
     }
 
     return 0;

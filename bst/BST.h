@@ -1,40 +1,34 @@
-// BST.h
 #ifndef BST_H
 #define BST_H
 
 #include "Song.h"
 
-// Define a BST node
+// A single node in the BST
 class BSTNode {
 public:
-    Song song;             // Song data
-    BSTNode* left;         // Left child
-    BSTNode* right;        // Right child
+    Song song;      // The song associated with the node
+    BSTNode* left;  // Pointer to the left child
+    BSTNode* right; // Pointer to the right child
 
-    // Constructor to initialize a node
-    BSTNode(Song song);
+    BSTNode(Song s) : song(s), left(nullptr), right(nullptr) {}
 };
 
-// Define the BST class
+// Binary Search Tree for storing songs
 class BST {
-public:
-    BSTNode* root;  // Root node
-
-    // Constructor
-    BST();
-
-    // Method to insert a node into the BST
-    void insert(Song song);
-
-    // Method to search for a song by track_id
-    BSTNode* search(int track_id) const;
-
 private:
-    // Helper method to insert a node into the BST recursively
-    BSTNode* insertHelper(BSTNode* node, Song song);
+    BSTNode* root;  // Root of the tree
 
-    // Helper method to search for a song by track_id recursively
-    BSTNode* searchHelper(BSTNode* node, int track_id) const;
+    // Helper functions
+    void insert(BSTNode*& node, Song song);  // Insert a song
+    BSTNode* search(BSTNode* node, int id);  // Search a song by ID
+    void inorderTraversal(BSTNode* node);    // Print all songs in order
+
+public:
+    BST() : root(nullptr) {}  // Constructor to initialize the BST
+
+    void insert(Song song);   // Public insert method
+    Song* search(int id);     // Public search method
+    void printInOrder();      // Public method to print all songs
 };
 
-#endif // BST_H
+#endif
