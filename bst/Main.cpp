@@ -53,7 +53,7 @@ std::vector<Song> loadSongsFromCSV(const std::string& filename, BST& bst) {
 int main() {
     BST bst;
 
-    std::vector<Song> songs = loadSongsFromCSV("test.csv", bst);
+    std::vector<Song> songs = loadSongsFromCSV("spotify_data.csv", bst);
 
     std::cout << "Songs in sorted order by ID:\n";
     bst.printInOrder();
