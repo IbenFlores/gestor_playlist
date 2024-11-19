@@ -26,8 +26,8 @@ public:
     int duration_ms;
     int time_signature;
 
-    Song();  // Constructor
-    void printSong() const;  // Method to print song information
+    Song();
+    void printSong() const;
 };
 
 #endif
