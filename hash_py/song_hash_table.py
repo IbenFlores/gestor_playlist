@@ -2,30 +2,30 @@ from song import Song
 
 class SongHashTable:
     def __init__(self):
-        # Dictionaries for each attribute to allow efficient searching
+        # Diccionarios para cada atributo que deseamos buscar
         self.by_artist = {}
         self.by_track_name = {}
         self.by_popularity = {}
         self.by_song_id = {}
 
     def insert(self, song):
-        # Insert into the song_id dictionary
+        # Insercion al diccionario por ID de cancion
         if song.song_id in self.by_song_id:
             print(f"Duplicate song_id detected: {song.song_id}. Ignoring.")
             return
         self.by_song_id[song.song_id] = song
 
-        # Insert into the artist dictionary
+        # Insercion al diccionario por nombre de artista
         if song.artist_name not in self.by_artist:
             self.by_artist[song.artist_name] = []
         self.by_artist[song.artist_name].append(song)
 
-        # Insert into the track name dictionary
+        # Insercion al diccionario por nombre de cancion
         if song.track_name not in self.by_track_name:
             self.by_track_name[song.track_name] = []
         self.by_track_name[song.track_name].append(song)
 
-        # Insert into the popularity dictionary
+        # Insercion al diccionario por popularidad
         if song.popularity not in self.by_popularity:
             self.by_popularity[song.popularity] = []
         self.by_popularity[song.popularity].append(song)
