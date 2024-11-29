@@ -44,7 +44,7 @@ def conocer_cancion_nueva(df, reproductor_personal):
             print("Opción no válida. Por favor, selecciona una opción válida (1-3).")
 
 # Ruta del archivo CSV
-file_path = "spotify_data.csv"
+file_path = "hash_py/spotify_data.csv"
 
 try:
     df = pd.read_csv(

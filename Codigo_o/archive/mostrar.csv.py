@@ -120,7 +120,7 @@ def mostrar_todas_las_canciones(df):
 try:
     # Leer el archivo CSV ignorando líneas mal formateadas
     df = pd.read_csv(
-        file_path,
+        "hash_py/spotify_data.csv",
         quotechar='"',
         skipinitialspace=True,
         on_bad_lines='skip',
