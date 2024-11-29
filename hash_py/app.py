@@ -194,7 +194,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     # Load songs from CSV
-    file_path = 'hash_py/spotify_data.csv'
+    file_path = 'gestor_app/spotify_data.csv'
     hash_table = load_songs_from_csv(file_path)
 
     # Start main window
