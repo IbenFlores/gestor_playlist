@@ -141,7 +141,7 @@ class SearchByPopularityWindow(QWidget):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, hash_table):
+    def __init__(self, hash_table, playlist_manager):
         super().__init__()
         self.setWindowTitle("Song Search App")
         self.setGeometry(100, 100, 800, 600)
@@ -155,20 +155,39 @@ class MainWindow(QMainWindow):
 
         # Load all windows
         self.hash_table = hash_table
+        self.playlist_manager = playlist_manager
         self.menu_widget = self.create_menu()
 
         # Callback to switch back to menu
         switch_to_menu_callback = lambda: self.stacked_widget.setCurrentWidget(self.menu_widget)
 
-        self.search_by_artist_window = SearchByArtistWindow(hash_table, switch_to_menu_callback)
-        self.search_by_track_name_window = SearchByTrackNameWindow(hash_table, switch_to_menu_callback)
-        self.search_by_popularity_window = SearchByPopularityWindow(hash_table, switch_to_menu_callback)
+        # Initialize search windows
+        self.search_by_artist_window = SearchByArtistWindow(
+            hash_table, playlist_manager, switch_to_menu_callback
+        )
+        self.search_by_track_name_window = SearchByTrackNameWindow(
+            hash_table, playlist_manager, switch_to_menu_callback
+        )
+        self.search_by_popularity_window = SearchByPopularityWindow(
+            hash_table, playlist_manager, switch_to_menu_callback
+        )
 
         # Add widgets to stack
         self.stacked_widget.addWidget(self.menu_widget)
         self.stacked_widget.addWidget(self.search_by_artist_window)
         self.stacked_widget.addWidget(self.search_by_track_name_window)
         self.stacked_widget.addWidget(self.search_by_popularity_window)
+
+    def closeEvent(self, event):
+        """
+        Captura el evento de cierre de la ventana.
+        Guarda todas las playlists en archivos CSV antes de cerrar el programa.
+        """
+        print("Guardando playlists...")
+        for playlist_name in self.playlist_manager.playlists.keys():
+            self.playlist_manager.save_playlist_to_csv(playlist_name)
+        print("Playlists guardadas correctamente.")
+        event.accept()  # Permite cerrar la ventana
 
     def create_menu(self):
         menu_widget = QWidget()
@@ -195,10 +214,13 @@ if __name__ == '__main__':
 
     # Load songs from CSV
     file_path = 'gestor_app/spotify_data.csv'
-    hash_table = load_songs_from_csv(file_path)
+    hash_table = load_songs_into_hash_table(file_path)
+
+    # Create playlist manager
+    playlist_manager = PlaylistManager()
 
     # Start main window
-    main_window = MainWindow(hash_table)
+    main_window = MainWindow(hash_table, playlist_manager)
     main_window.show()
 
     sys.exit(app.exec())

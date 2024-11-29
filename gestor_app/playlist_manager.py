@@ -1,3 +1,4 @@
+import csv
 from queue import Queue
 import random
 from song import Song
@@ -78,3 +79,26 @@ class PlaylistManager:
         else:
             print("La cola de reproducción está vacía.")
             return None
+        
+    def save_playlist_to_csv(self, playlist_name):
+        """Guardar las canciones de una playlist en un archivo CSV."""
+        if playlist_name in self.playlists:
+            file_name = f"playlists/{playlist_name}.csv"
+            with open(file_name, mode='w', newline='', encoding='utf-8') as file:
+                writer = csv.writer(file)
+                writer.writerow([
+                    "song_id", "artist_name", "track_name", "track_id", "popularity", "year",
+                    "genre", "danceability", "energy", "key", "loudness", "mode",
+                    "speechiness", "acousticness", "instrumentalness", "liveness", "valence",
+                    "tempo", "duration_ms", "time_signature"
+                ])
+                for song in self.playlists[playlist_name]:
+                    writer.writerow([
+                        song.song_id, song.artist_name, song.track_name, song.track_id, song.popularity,
+                        song.year, song.genre, song.danceability, song.energy, song.key, song.loudness,
+                        song.mode, song.speechiness, song.acousticness, song.instrumentalness, song.liveness,
+                        song.valence, song.tempo, song.duration_ms, song.time_signature
+                    ])
+            print(f"Playlist '{playlist_name}' guardada en {file_name}")
+        else:
+            print(f"La playlist '{playlist_name}' no existe.")

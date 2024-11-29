@@ -54,7 +54,7 @@ class SearchWindowBase(QWidget):
 
     def add_to_playlist(self):
         """Agregar la canción seleccionada a una playlist."""
-        track_id = self.song_selection.text()
+        track_id = int(self.song_selection.text())
         selected_playlist = self.playlist_selection.currentText()
         new_playlist_name = self.new_playlist_entry.text()
 
@@ -161,4 +161,11 @@ class SearchByPopularityWindow(SearchWindowBase):
 
             results = self.hash_table.search_by_popularity(min_popularity, max_popularity)
 
-            self.result
+            self.result_text.clear()
+            if results:
+                for song in results:
+                    self.result_text.append(f"{song.song_id}: {song.artist_name} - {song.track_name} (Popularity: {song.popularity})")
+            else:
+                self.result_text.append("No songs found in this popularity range.")
+        except ValueError:
+            self.result_text.append("Please enter valid numeric values for popularity.")
