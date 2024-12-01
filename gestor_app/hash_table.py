@@ -11,29 +11,36 @@ class SongHashTable:
         if song.song_id not in self.by_song_id:
             self.by_song_id[song.song_id] = song
 
-        # Insertar por artista
-        if song.artist_name not in self.by_artist:
-            self.by_artist[song.artist_name] = []
-        self.by_artist[song.artist_name].append(song)
+        # Sanitizar el nombre del artista
+        artist_name = str(song.artist_name).strip() if song.artist_name else ""
+        if artist_name not in self.by_artist:
+            self.by_artist[artist_name] = []
+        self.by_artist[artist_name].append(song)
 
-        # Insertar por nombre de canción
-        if song.track_name not in self.by_track_name:
-            self.by_track_name[song.track_name] = []
-        self.by_track_name[song.track_name].append(song)
+        # Sanitizar el nombre de la canción
+        track_name = str(song.track_name).strip() if song.track_name else ""
+        if track_name not in self.by_track_name:
+            self.by_track_name[track_name] = []
+        self.by_track_name[track_name].append(song)
 
         # Insertar por popularidad
         if song.popularity not in self.by_popularity:
             self.by_popularity[song.popularity] = []
         self.by_popularity[song.popularity].append(song)
-    
+
     def search_by_artist(self, artist_name):
         """Buscar canciones cuyo nombre del artista comienza con el nombre proporcionado."""
         results = []
+        if not artist_name:  # Si el parámetro es None o vacío
+            return results
+
+        artist_name = str(artist_name).strip().lower()
         for artist in self.by_artist.keys():
-            if artist.lower().startswith(artist_name.lower()):
-                for song in self.by_artist[artist]:
-                    results.append(song)
+            artist_sanitized = str(artist).strip().lower()
+            if artist_sanitized.startswith(artist_name):
+                results.extend(self.by_artist[artist])
         return results
+
 
     def search_by_track_name(self, track_name):
         return self.by_track_name.get(track_name, [])
@@ -41,10 +48,14 @@ class SongHashTable:
     def search_by_track_name(self, track_name):
         """Buscar canciones cuyo nombre de la pista comienza con el nombre proporcionado."""
         results = []
-        for name in self.by_track_name.keys():  # Usamos el método all_songs
-            if name.lower().startswith(track_name.lower()):
-                for song in self.by_track_name[name]:
-                    results.append(song)
+        if not track_name:  # Si el parámetro es None o vacío
+            return results
+
+        track_name = str(track_name).strip().lower()
+        for name in self.by_track_name.keys():
+            name_sanitized = str(name).strip().lower()
+            if name_sanitized.startswith(track_name):
+                results.extend(self.by_track_name[name])
         return results
 
     def search_by_popularity(self, min_popularity=None, max_popularity=None):
